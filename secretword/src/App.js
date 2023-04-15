@@ -20,7 +20,7 @@ const stages = [
 
 function App() {
   const [gameStage, setGameStage] = useState(stages[0].name);
-  const[words] = useState(wordsList);
+  const [words] = useState(wordsList);
 
   const [pickedWord, setPickedWord] = useState("");
   const [pickedCategory, setPickedCategory] = useState("");
@@ -68,8 +68,8 @@ function App() {
   };
 
   // processar o input da letra
-  const verifyLetter = () => {
-    setGameStage(stages[2].name);
+  const verifyLetter = (letter) => {
+    console.log(letter);
   };
 
   // Restartar o jogo
