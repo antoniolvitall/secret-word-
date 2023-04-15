@@ -33,23 +33,22 @@ function App() {
   const [guesses, setGuesses] = useState(guessesQty);
   const [score, setScore] = useState(0);
 
-  const pickWordAndCategory = () => {
+  const pickWordAndCategory = useCallback(() => {
     // pegando uma categoria aleatoria
     const categories = Object.keys(words);
     const category = categories[Math.floor(Math.random() * Object.keys(categories).length)];
-  
-    console.log(category);
 
     //pegando uma palavra aleatoria
     const word = words[category][Math.floor(Math.random() * words[category].length)];
 
-    console.log(word);
-
     return {word, category}
-  };
+  }, [words]);
 
   // start game
-  const startGame = () => {
+  const startGame = useCallback(() => {
+    // limpando todas as letras
+    clearLetterStates();
+
     // pick word e pick category
     const {word, category} = pickWordAndCategory();
 
@@ -58,16 +57,13 @@ function App() {
 
     wordLetters = wordLetters.map((l) => l.toLowerCase());
 
-    console.log(word, category);
-    console.log(wordLetters);
-
     // setando estados
     setPickedWord(word);
     setPickedCategory(category);
     setLetters(wordLetters);
 
     setGameStage(stages[1].name);
-  };
+  }, [pickWordAndCategory]);
 
   // processar o input da letra
   const verifyLetter = (letter) => {
@@ -99,6 +95,7 @@ function App() {
     setWrongLetters([]);
   };
 
+// condicao de derrota
   useEffect(() => {
     if(guesses <= 0) {
       // resetar todos os estados
@@ -107,6 +104,20 @@ function App() {
       setGameStage(stages[2].name);
     }
   }, [guesses]);
+
+// checando condicao de vitoria
+  useEffect(() => {
+    const uniqueLetters = [...new Set(letters)];
+
+    //condicao de vitoria
+    if(guessedLetters.length === uniqueLetters.length) {
+      // adicionar pontuacao
+      setScore((actualScore) => actualScore += 100)
+
+      // recomecar o jogo com palavra nova
+      startGame();
+    }
+  }, [guessedLetters, letters, startGame])
 
   // Restartar o jogo
   const retry = () => {
