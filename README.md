@@ -1,5 +1,5 @@
 # secret-word
-Secret Word com React
+Secret Word com React.
 
 No diretório do projeto você pode digitar:
 
